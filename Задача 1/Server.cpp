@@ -1,53 +1,13 @@
 ﻿/*
 #include <iostream>
+#include <string>
 
 #include <boost/asio.hpp>
-
-int main(int argc, char** argv)
-{
-	system("chcp 1251");
-
-	const std::size_t size = 30;
-
-	auto port = 3333;
-
-	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address_v4::any(), port);
-
-	boost::asio::io_service io_service;
-
-	try
-	{
-		boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint.protocol());
-
-		acceptor.bind(endpoint);
-
-		acceptor.listen(size);
-
-		boost::asio::ip::tcp::socket socket(io_service);
-
-		acceptor.accept(socket);
-	}
-	catch (boost::system::system_error& e)
-	{
-		std::cout << "Error occured! Error code = " << e.code() << ". Message: " << e.what() << std::endl;
-
-		system("pause");
-
-		return e.code().value();
-	}
-
-	system("pause");
-
-	return EXIT_SUCCESS;
-}*/
-
-#include <iostream>
-
-#include <boost/asio.hpp>
+using namespace std;
 
 std::string read_data(boost::asio::ip::tcp::socket & socket)
 {
-	const std::size_t length = 10;
+	const std::size_t length = 50;
 	char buffer[length];
 	boost::asio::read(socket, boost::asio::buffer(buffer, length));
 	return std::string(buffer, length);
@@ -94,13 +54,8 @@ int main(int argc, char ** argv)
 
 		acceptor.accept(socket);
 
-		//while (true)
-		//{
-
-
-
-			std::cout << "is connected" << std::endl;
-			//std::string mes = read_data(socket);
+		std::cout << "connection succeed" << std::endl;
+		while (true)
 			std::cout << read_data_until(socket) << std::endl;
 		//	if (mes == "stop_chat")
 			//	break;
@@ -110,7 +65,7 @@ int main(int argc, char ** argv)
 	}
 	catch (boost::system::system_error & e)
 	{
-		std::cout << "Error occured! Error code = " << e.code() << ". Message: " << e.what() << std::endl;
+		std::cout << "Chat is ended. " << e.what() << std::endl;
 
 		system("pause");
 

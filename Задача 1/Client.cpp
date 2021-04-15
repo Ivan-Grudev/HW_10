@@ -3,27 +3,17 @@
 
 #include <boost/asio.hpp>
 
+char name[50];
+
 void write_data(boost::asio::ip::tcp::socket& socket)
 {
-	std::string name;
-	//char name[] = "";
-	std::cout << "Write your name: ";
-	std::cin >> name;
-	std::string message;
-	//char message[] = "";
+	char message[50];
 	std::cout << "Write your message: ";
-	std::cin >> message;
-//	std::string data = "Hello, Network Programming!EOF";
-//	std::string data = name + ": " + message + "!EOF";
-	//std::string data = name + ": " + message;
-	std::string data = name + ": " + message + "!EOF";
-	//char data[] = "";
-	//strcat(data, name);
-	//strcat(data, ": ");
-	//message = message + "!EOF";
-	//strcat(message, "!EOF");
-	//strcat(data, message);
-	//std::string data = message + "!EOF";
+	std::cin.getline(message, 50);
+	std::string data = name;
+	data += ": ";
+	data += message;
+	data += "!EOF";
 	std::cout << std::endl << data << std::endl;
 	//std::string data = message;
 
@@ -74,7 +64,10 @@ int main(int argc, char** argv)
 
 		socket.connect(endpoint);
 
-		write_data(socket);
+		std::cout << "Write your name: ";
+		std::cin.getline(name, 50);
+		while(true) 
+			write_data(socket);
 	}
 	catch (boost::system::system_error& e)
 	{
