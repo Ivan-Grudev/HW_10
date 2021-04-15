@@ -1,4 +1,4 @@
-﻿/*
+
 #include <iostream>
 #include <string>
 
@@ -57,11 +57,7 @@ int main(int argc, char ** argv)
 		std::cout << "connection succeed" << std::endl;
 		while (true)
 			std::cout << read_data_until(socket) << std::endl;
-		//	if (mes == "stop_chat")
-			//	break;
-			//else
-			//	std::cout << mes << std::endl;
-		//}
+		
 	}
 	catch (boost::system::system_error & e)
 	{
