@@ -15,34 +15,8 @@ void write_data(boost::asio::ip::tcp::socket& socket)
 	data += message;
 	data += "!EOF";
 	std::cout << std::endl << data << std::endl;
-	//std::string data = message;
 
 	boost::asio::write(socket, boost::asio::buffer(data));
-}
-
-std::string read_data(boost::asio::ip::tcp::socket& socket)
-{
-	const std::size_t length = 10;
-	char buffer[length];
-	boost::asio::read(socket, boost::asio::buffer(buffer, length));
-	return std::string(buffer, length);
-}
-
-std::string read_data_until(boost::asio::ip::tcp::socket& socket)
-{
-	boost::asio::streambuf buffer;
-
-	boost::asio::read_until(socket, buffer, '!');
-
-	std::string message;
-
-	// Because buffer 'buf' may contain some other data
-	// after '\n' symbol, we have to parse the buffer and
-	// extract only symbols before the delimiter.
-	std::istream input_stream(&buffer);
-	std::getline(input_stream, message, '!');
-
-	return message;
 }
 
 int main(int argc, char** argv)
