@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 
 #include <boost/asio.hpp>
@@ -14,9 +14,24 @@ void write_data(boost::asio::ip::tcp::socket& socket)
 	data += ": ";
 	data += message;
 	data += "!EOF";
-	std::cout << std::endl << data << std::endl;
-
 	boost::asio::write(socket, boost::asio::buffer(data));
+}
+
+std::string read_data_until(boost::asio::ip::tcp::socket& socket)
+{
+	boost::asio::streambuf buffer;
+
+	boost::asio::read_until(socket, buffer, '!');
+
+	std::string message;
+
+	// Because buffer 'buf' may contain some other data
+	// after '\n' symbol, we have to parse the buffer and
+	// extract only symbols before the delimiter.
+	std::istream input_stream(&buffer);
+	std::getline(input_stream, message, '!');
+
+	return message;
 }
 
 int main(int argc, char** argv)
@@ -24,6 +39,8 @@ int main(int argc, char** argv)
 	system("chcp 1251");
 
 	std::string raw_ip_address = "127.0.0.1";
+
+	const std::size_t size = 30;
 
 	auto port = 3333;
 
@@ -40,8 +57,16 @@ int main(int argc, char** argv)
 
 		std::cout << "Write your name: ";
 		std::cin.getline(name, 50);
-		while(true) 
+
+		while (true) {
 			write_data(socket);
+			boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint.protocol());
+
+			acceptor.bind(endpoint);
+
+			acceptor.listen(size);
+			std::cout << read_data_until(socket) << std::endl;
+		}
 	}
 	catch (boost::system::system_error& e)
 	{
