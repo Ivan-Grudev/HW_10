@@ -1,16 +1,9 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
-
 #include <boost/asio.hpp>
 using namespace std;
 
-std::string read_data(boost::asio::ip::tcp::socket & socket)
-{
-	const std::size_t length = 50;
-	char buffer[length];
-	boost::asio::read(socket, boost::asio::buffer(buffer, length));
-	return std::string(buffer, length);
-}
+char name[50];
 
 std::string read_data_until(boost::asio::ip::tcp::socket & socket)
 {
@@ -27,6 +20,18 @@ std::string read_data_until(boost::asio::ip::tcp::socket & socket)
 	std::getline(input_stream, message, '!');
 
 	return message;
+}
+
+void write_data(boost::asio::ip::tcp::socket& socket)
+{
+	char message[50];
+	std::cout << "Write your message: ";
+	std::cin.getline(message, 50);
+	std::string data = name;
+	data += ": ";
+	data += message;
+	data += "!EOF";
+	boost::asio::write(socket, boost::asio::buffer(data));
 }
 
 int main(int argc, char ** argv)
@@ -54,8 +59,13 @@ int main(int argc, char ** argv)
 		acceptor.accept(socket);
 
 		std::cout << "connection succeed" << std::endl;
-		while (true)
+		std::cout << "Write your name: ";
+		std::cin.getline(name, 50);
+
+		while (true) {
 			std::cout << read_data_until(socket) << std::endl;
+			write_data(socket);
+		}
 	}
 	catch (boost::system::system_error & e)
 	{
@@ -70,3 +80,4 @@ int main(int argc, char ** argv)
 
 	return EXIT_SUCCESS;
 }
+
