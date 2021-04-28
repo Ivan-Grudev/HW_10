@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	}
 	catch (boost::system::system_error& e)
 	{
-		std::cout << "Error occured! Error code = " << e.code() << ". Message: " << e.what() << std::endl;
+		std::cout << "Chat is ended" << ". Message: " << e.what() << std::endl;
 
 		system("pause");
 
